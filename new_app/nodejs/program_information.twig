@@ -1,0 +1,146 @@
+{%extends "app/_bases/default.base.twig"%}
+
+{%set menu_active = "agenda"%}
+
+{%block content%}
+
+	<div class="container-fluid">
+		<h1>{{agenda.session_title}}</h1>
+
+		<div class="row mb-2">
+			<div class="col">
+				<button class="btn btn-secondary float-right go-back"><i class="fa fa-arrow-left"></i> Go Back</button>
+			</div>
+		</div>
+
+		{%if not agenda%}
+			<div class="alert alert-danger"><i class="fa fa-fw fa-2x fa-exclamation"></i> Sorry, there has been a problem.</div>
+		{%endif%}
+
+
+
+		<div class="row mb-2">
+			<div class="col-12">
+				<div class="card border-left-primary">
+					<div class="card-body">
+						<h4>{{agenda.start_time|date("H:i")}} - {{agenda.end_time|date("H:i")}}</h4>
+						<div class="row">
+							<div class="col-sm-7">
+								<p class="lead">
+									{{agenda.session_description?:"No description available."}}
+								</p>
+							</div>
+							<div class="col-sm-5">
+								<div class="card">
+									<div class="card-header">
+										Speakers
+									</div>
+									<ul class="list-group list-group-flush">
+										{%for speaker in agenda.speakers%}
+											<li class="list-group-item"><a href="#" class="btn btn-link" data-toggle="modal" data-target="#speaker{{speaker.id}}">{{speaker.first_name}} {{speaker.last_name}}</a>{{speaker.organisation?", "~speaker.organisation:""}}</li>
+										{%else%}
+											<li class="list-group-item">No speakers available.</li>
+										{%endfor%}
+									</ul>
+								</div>
+
+							</div>
+						</div>
+
+
+					</div>
+				</div>
+
+				<div class="card mt-4">
+					<div class="card-header bg-gradient-info text-white">
+						Booked Delegates
+					</div>
+					<div class="card-body">
+						<div class="row">
+							{%for delegate in agenda.booked%}
+								<div class="col-sm-12 col-md-6 col-lg-4 mb-3">
+									<div class="card border-left-primary">
+										<div class="card-body">
+											<img src="{{delegate.meta.photo?:'https://image.flaticon.com/icons/png/512/97/97895.png'}}" class="mr-3 img-fluid img-thumbnail" alt="Delegate photo" style="max-width: 75px">
+											<h5 class="m-2">{{delegate.first_name}} {{delegate.last_name}}</h5>
+											<a href="/app/delegates/profile/{{delegate.id}}" class="btn btn-sm btn-primary">View Profile</a>
+										</div>
+									</div>
+								</div>
+							{%else%}
+								<div class="col-12">
+									<p>No delegates are booked at this moment. <a href="#">Be the first!</a></p>
+								</div>
+							{%endfor%}
+						</div>
+					</div>
+				</div>
+
+				<div class="card mt-4">
+					<div class="card-header bg-gradient-info text-white">
+						Attended Delegates
+					</div>
+					<div class="card-body">
+						<div class="row">
+							{%for delegate in agenda.attended%}
+								<div class="col-sm-12 col-md-6 col-lg-4 mb-3">
+									<div class="card border-left-primary">
+										<div class="card-body">
+											<img src="{{delegate.meta.photo?:'https://image.flaticon.com/icons/png/512/97/97895.png'}}" class="mr-3 img-fluid img-thumbnail" alt="Delegate photo" style="max-width: 75px">
+											<h5 class="m-2">{{delegate.first_name}} {{delegate.last_name}}</h5>
+											<a href="/app/delegates/profile/{{delegate.id}}" class="btn btn-sm btn-primary">View Profile</a>
+										</div>
+									</div>
+								</div>
+							{%else%}
+								<div class="col-12">
+									<p>No delegates are attended at this moment.</p>
+								</div>
+							{%endfor%}
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+	</div>
+
+{%endblock%}
+
+
+{%block sidebar%}
+	{%include 'app/_common/sidebar.twig'%}
+{%endblock%}
+
+{%block footer%}
+	{%include 'app/_common/footer.twig'%}
+{%endblock%}
+
+{%block navbar%}
+	{%include 'app/_common/navbar.twig'%}
+{%endblock%}
+
+{%block modals%}
+	{%for speaker in agenda.speakers%}
+		<div class="modal fade" id="speaker{{speaker.id}}" tabindex="-1" role="dialog" aria-labelledby="Speaker Modal" aria-hidden="true">
+			<div class="modal-dialog" role="document">
+				<div class="modal-content">
+					<div class="modal-header">
+						<h5 class="modal-title">{{speaker.first_name}} {{speaker.last_name}}</h5>
+						<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+							<span aria-hidden="true">&times;</span>
+						</button>
+					</div>
+					<div class="modal-body">
+						<img src="{{speaker.}}">
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+						<button type="button" class="btn btn-primary">Save changes</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	{%endfor%}
+{%endblock%}
